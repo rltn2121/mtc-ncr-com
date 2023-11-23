@@ -1,6 +1,5 @@
 package core.converters;
 
-import core.exg.converters.ExgMessageDeserializer;
 import org.apache.kafka.common.header.Headers;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
