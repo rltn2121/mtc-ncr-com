@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value="/sdaMainMas", method= RequestMethod.GET, consumes="application/json;")
+//@RequestMapping(value="/sdaMainMas", method= RequestMethod.GET, consumes="application/json;")
+@RequestMapping("/sdaMainMas")
 @RequiredArgsConstructor
 public class MtcSdaMainMasController implements MtcSdaMainMasApi {
 
