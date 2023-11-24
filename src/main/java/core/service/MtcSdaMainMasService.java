@@ -16,16 +16,16 @@ import org.springframework.stereotype.Service;
 public class MtcSdaMainMasService {
     private final SdaMainMasRepository sdaMainMasRepository;
     private static final Logger log = LoggerFactory.getLogger(MtcSdaMainMasService.class);
-    public MtcNcrSdaMainMasResponse getMainMas(String acno , String cur_c , String gid)
+    public MtcNcrSdaMainMasResponse getMainMas(MtcNcrSdaMainMasRequest requestInfo)
     {
         MtcNcrSdaMainMasResponse sdaMainMasResponse = new MtcNcrSdaMainMasResponse();
         try
         {
             //sda_main_mas에서 과목코드와 계좌번호로 값을 읽어온다.
             SdaMainMas sdaMainMas = this.sdaMainMasRepository
-                    .findById(new SdaMainMasId(acno , cur_c)).get();
-           log.info("$$$sda_main_mas {} " , sdaMainMas.toString());
-            sdaMainMasResponse.setGid(gid);
+                    .findById(new SdaMainMasId(requestInfo.getAcno(), requestInfo.getCurC())).get();
+            log.info("$$$sda_main_mas {} " , sdaMainMas.toString());
+            sdaMainMasResponse.setGid(requestInfo.getGid());
             sdaMainMasResponse.setAcno(sdaMainMas.getAcno());
             sdaMainMasResponse.setCur_c(sdaMainMas.getCur_c());
             sdaMainMasResponse.setAc_jan(sdaMainMas.getAc_jan());
