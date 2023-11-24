@@ -15,7 +15,7 @@ public class MtcNcrSdaMainMasResponse {
     private String cur_c;
 
     //계좌 잔액
-    private String ac_jan;
+    private double ac_jan;
 
     //global id
     private String gid;
