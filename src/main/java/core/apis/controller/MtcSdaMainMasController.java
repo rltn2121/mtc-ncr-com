@@ -20,10 +20,19 @@ public class MtcSdaMainMasController implements MtcSdaMainMasApi {
     private final static Logger log = LoggerFactory.getLogger(MtcSdaMainMasController.class);
     private final MtcSdaMainMasService sdaMainMasService;
 
-    @Override
+
+    /*
     public ResponseEntity<?> getSdaMainMas(MtcNcrSdaMainMasRequest comRequest) {
         MtcNcrSdaMainMasResponse mainMasResponse = new MtcNcrSdaMainMasResponse();
         mainMasResponse = sdaMainMasService.getMainMas(comRequest);
+        return ResponseEntity.ok(mainMasResponse);
+    }
+     */
+
+    @Override
+    public ResponseEntity<?> getSdaMainMas(String acno, String cur_c , String gid) {
+        MtcNcrSdaMainMasResponse mainMasResponse = new MtcNcrSdaMainMasResponse();
+        mainMasResponse = sdaMainMasService.getMainMas(acno, cur_c , gid);
         return ResponseEntity.ok(mainMasResponse);
     }
 }

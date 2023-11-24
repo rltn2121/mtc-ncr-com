@@ -37,7 +37,8 @@ public class SdaMainMasRequestConsumer {
         {
             for(int i = 0 ; i < updateRequest.getRequestSubList().size() ; i++)
             {
-                MtcNcrSdaMainMasResponse mainMasResponse = mainMasService.getMainMas(new MtcNcrSdaMainMasRequest(updateRequest.getAcno() , updateRequest.getRequestSubList().get(i).getCur_c(),""));
+                MtcNcrSdaMainMasResponse mainMasResponse =
+                        mainMasService.getMainMas(updateRequest.getAcno(), updateRequest.getRequestSubList().get(i).getCur_c() , updateRequest.getGid());
                 if(( updateRequest.getRequestSubList().get(i).getSign() < 0 ) //출금요청이면서
                     && (mainMasResponse.getAc_jan() < updateRequest.getRequestSubList().get(i).getTrxAmt())) //잔액이 부족한경우
                 {
