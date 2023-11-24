@@ -24,6 +24,16 @@ public class SdaMainMasRequestConsumer {
     private final SdaMainMasRepository sdaMainMasRepository;
     private final MtcSdaMainMasService mainMasService;
 
+    public int getUpmug(String svcid , String successYn)
+    {
+        if("PAY".equals(svcid)&&"SUCCESS".equals(successYn)) return 1;
+        if("EXG".equals(svcid)&&"SUCCESS".equals(successYn)) return 2;
+        if("PAY".equals(svcid)&&"FAIL".equals(successYn)) return 3;
+        if("EXG".equals(svcid)&&"FAIL".equals(successYn)) return 4;
+
+        return 0 ;
+    }
+
     @KafkaListener(topics = "mtc.ncr.comRequest", groupId="practice22201785")
     public void consumeMessage(@Payload MtcNcrUpdateMainMasRequest updateRequest ,
                                @Header(name = KafkaHeaders.RECEIVED_KEY , required = false) String key ,
@@ -33,29 +43,34 @@ public class SdaMainMasRequestConsumer {
     ) {
         log.info("############sda main mas 구독시작한다###############{}" , updateRequest.toString());
         MtcResultRequest resultDto = new MtcResultRequest();
-        try
+        for(int i = 0 ; i < updateRequest.getRequestSubList().size() ; i++)
         {
-            for(int i = 0 ; i < updateRequest.getRequestSubList().size() ; i++)
+            MtcResultRequest resultRequest
+                    = new MtcResultRequest( updateRequest.getAcno() , updateRequest.getRequestSubList().get(i).getTrxdt(),
+                    updateRequest.getRequestSubList().get(i).getCur_c() ,
+                    0, /*업무구분은 비워둔다*/
+                    updateRequest.getAprvSno() /*승인번호*/,
+                    updateRequest.getRequestSubList().get(i).getTrxAmt() /*요청금액*/,
+                    0.0 /*거래전잔액으로 셋팅한다*/,
+                    "" /*에러메세지는 비워둔다*/,
+                    updateRequest.getPayInfo(),
+                    updateRequest.getGid());
+
+            try
             {
                 MtcNcrSdaMainMasResponse mainMasResponse =
-                        mainMasService.getMainMas(updateRequest.getAcno(), updateRequest.getRequestSubList().get(i).getCur_c() , updateRequest.getGid());
+                        mainMasService.getMainMas( new MtcNcrSdaMainMasRequest(updateRequest.getAcno(),
+                                updateRequest.getRequestSubList().get(i).getCur_c() , updateRequest.getGid()));
+
+                resultRequest.setNujkJan(mainMasResponse.getAc_jan()); // 누적잔액 set
+
                 if(( updateRequest.getRequestSubList().get(i).getSign() < 0 ) //출금요청이면서
-                    && (mainMasResponse.getAc_jan() < updateRequest.getRequestSubList().get(i).getTrxAmt())) //잔액이 부족한경우
+                    && (mainMasResponse.getAc_jan() < updateRequest.getRequestSubList().get(i).getTrxAmt())) //잔액이 부족한 경우
                 {
-                    // result Queue에도 넣는다.
-                    kafkaTemplate.send("mtc.ncr.result", "PAY" ,
-                            new MtcResultRequest( updateRequest.getAcno() ,
-                                    updateRequest.getRequestSubList().get(i).getTrxdt(),
-                                    updateRequest.getRequestSubList().get(i).getCur_c() ,
-                                    2,
-                                    "",
-                                    updateRequest.getRequestSubList().get(i).getTrxAmt(),
-                                    mainMasResponse.getAc_jan() /*거래전잔액으로 셋팅한다*/,
-                                    "출금요청 금액이 잔액보다 큽니다." ,
-                                    new MtcNcrPayRequest() /*payinfo 는 null로 셋팅*/,
-                                    updateRequest.getGid()
-                                    )
-                            );
+                    // result Queue에 넣는다.
+                    resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "FAIL"));
+                    resultRequest.setErrMsg("잔액보다 충전시도 금액이 더 큽니다");
+                    kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
                     break; // 더이상 진행하지 않음
                 }
                 else
@@ -64,17 +79,24 @@ public class SdaMainMasRequestConsumer {
                     int result = mainMasService.updateMainMas(updateRequest.getRequestSubList().get(i) , updateRequest.getAcno());
                     if( result == 1 ) { //성공
                         // result 큐에 성공으로 넣음
+                        resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "SUCCESS"));
+                        kafkaTemplate.send("mtc.ncr.result", "SUCCESS" , resultRequest);
                     }
                     else {
                         // result 큐에 실패로 넣음
+                        resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "FAIL"));
+                        kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
                         break; // 더이상 진행하지 않음
                     }
                 }
             }
+            catch (Exception e)
+            {
+                // result 큐에 실패로 넣음
+                resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "FAIL"));
+                kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
+            }
         }
-        catch (Exception e)
-        {
-            // result 큐에 실패로 넣음
-        }
+
     }
 }
