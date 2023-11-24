@@ -17,5 +17,5 @@ public class MtcNcrUpdateMainMasRequest {
     private String aprvSno;
     private List<MtcNcrUpdateMainMasRequestSub> requestSubList;
     private MtcNcrPayRequest payInfo;
-    private String svcid;
+    private String svcId;
 }

@@ -68,7 +68,7 @@ public class SdaMainMasRequestConsumer {
                     && (mainMasResponse.getAc_jan() < updateRequest.getRequestSubList().get(i).getTrxAmt())) //잔액이 부족한 경우
                 {
                     // result Queue에 넣는다.
-                    resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "FAIL"));
+                    resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "FAIL"));
                     resultRequest.setErrMsg("잔액보다 충전시도 금액이 더 큽니다");
                     kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
                     break; // 더이상 진행하지 않음
@@ -79,12 +79,12 @@ public class SdaMainMasRequestConsumer {
                     int result = mainMasService.updateMainMas(updateRequest.getRequestSubList().get(i) , updateRequest.getAcno());
                     if( result == 1 ) { //성공
                         // result 큐에 성공으로 넣음
-                        resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "SUCCESS"));
+                        resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "SUCCESS"));
                         kafkaTemplate.send("mtc.ncr.result", "SUCCESS" , resultRequest);
                     }
                     else {
                         // result 큐에 실패로 넣음
-                        resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "FAIL"));
+                        resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "FAIL"));
                         kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
                         break; // 더이상 진행하지 않음
                     }
@@ -93,7 +93,7 @@ public class SdaMainMasRequestConsumer {
             catch (Exception e)
             {
                 // result 큐에 실패로 넣음
-                resultRequest.setUpmuG(getUpmug(updateRequest.getSvcid(), "FAIL"));
+                resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "FAIL"));
                 kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
             }
         }
