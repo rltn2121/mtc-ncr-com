@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class MtcResultRequest {
     private String acno;
     private String trxdt;
@@ -19,6 +18,4 @@ public class MtcResultRequest {
     private MtcNcrPayRequest payinfo;
     private String gid;
 
-    public MtcResultRequest(String acno, String curC, int trxAmt, double acJan, String s, MtcNcrPayRequest mtcNcrPayRequest, String gid) {
-    }
 }

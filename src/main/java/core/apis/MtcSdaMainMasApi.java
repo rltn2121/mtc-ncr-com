@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 public interface MtcSdaMainMasApi {
-    @GetMapping("/sdaMainMas")
+    @GetMapping("/{acno}")
     ResponseEntity<?> getSdaMainMas(@RequestBody MtcNcrSdaMainMasRequest comRequest);
 }
