@@ -21,8 +21,9 @@ public class MtcSdaMainMasController implements MtcSdaMainMasApi {
     private final MtcSdaMainMasService sdaMainMasService;
 
     @Override
-    public ResponseEntity<?> getSdaMainMas(MtcNcrSdaMainMasRequest comRequest) {
+    public ResponseEntity<?> getSdaMainMas(String acno, String cur_c) {
         MtcNcrSdaMainMasResponse mainMasResponse = new MtcNcrSdaMainMasResponse();
+        MtcNcrSdaMainMasRequest comRequest = new MtcNcrSdaMainMasRequest(acno,cur_c,"gid123");
         mainMasResponse = sdaMainMasService.getMainMas(comRequest);
         return ResponseEntity.ok(mainMasResponse);
     }
