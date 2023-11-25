@@ -5,16 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.dto.MtcExgRequest;
 import core.dto.MtcNcrPayRequest;
 import core.dto.MtcNcrSdaMainMasRequest;
+import core.dto.MtcNcrUpdateMainMasRequest;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
-public class ComMessageDeserializer implements Deserializer<MtcNcrSdaMainMasRequest> {
+public class ComMessageDeserializer implements Deserializer<MtcNcrUpdateMainMasRequest> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public MtcNcrSdaMainMasRequest deserialize(String s, byte[] bytes) {
+    public MtcNcrUpdateMainMasRequest deserialize(String s, byte[] bytes) {
         try {
-            return objectMapper.readValue(new String(bytes), MtcNcrSdaMainMasRequest.class);
+            return objectMapper.readValue(new String(bytes), MtcNcrUpdateMainMasRequest.class);
         } catch (JsonProcessingException e) {
             System.out.println(e.getOriginalMessage());
             throw new SerializationException(e);
