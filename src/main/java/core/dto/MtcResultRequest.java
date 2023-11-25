@@ -6,6 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class MtcResultRequest {
 
     // 1. gojeongslv 에 쌓기 위한 변수 셋팅

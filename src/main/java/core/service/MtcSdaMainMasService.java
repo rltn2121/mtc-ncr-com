@@ -43,9 +43,14 @@ public class MtcSdaMainMasService {
         {
             SdaMainMas sdaMainMas = this.sdaMainMasRepository
                     .findById(new SdaMainMasId(acno, requestInfo.getCur_c())).get();
+
+            log.info("$$$ update main mas 직전 계좌의 잔액 : {} {} {} " , acno , sdaMainMas.getAc_jan() , sdaMainMas.getCur_c());
             double trxamt = requestInfo.getSign() * requestInfo.getTrxAmt();
             sdaMainMas.setAc_jan(sdaMainMas.getAc_jan() + trxamt);
-            this.sdaMainMasRepository.save(sdaMainMas);
+            sdaMainMas = this.sdaMainMasRepository.save(sdaMainMas);
+
+            log.info("$$$ update main mas 성공 : 거래금액 {}, 현재금액 {}" , trxamt , sdaMainMas.getAc_jan() );
+
             return 1;
         }
         catch (Exception e)

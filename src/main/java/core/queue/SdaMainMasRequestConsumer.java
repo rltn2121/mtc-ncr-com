@@ -70,6 +70,7 @@ public class SdaMainMasRequestConsumer {
                     // result Queue에 넣는다.
                     resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "FAIL"));
                     resultRequest.setErrMsg("잔액보다 충전시도 금액이 더 큽니다");
+                    log.info("$$ insert value to result topic : {}" , resultRequest.toString());
                     kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
                     break; // 더이상 진행하지 않음
                 }
@@ -77,14 +78,19 @@ public class SdaMainMasRequestConsumer {
                 {
                     //결제를 시도한다.
                     int result = mainMasService.updateMainMas(updateRequest.getRequestSubList().get(i) , updateRequest.getAcno());
+
+                    log.info("$$$ update Main Mas return value -----> {}" , result == 1 ? "성공" : "실패");
+
                     if( result == 1 ) { //성공
                         // result 큐에 성공으로 넣음
                         resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "SUCCESS"));
+                        log.info("$$ insert value to result topic : {}" , resultRequest.toString());
                         kafkaTemplate.send("mtc.ncr.result", "SUCCESS" , resultRequest);
                     }
                     else {
                         // result 큐에 실패로 넣음
                         resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "FAIL"));
+                        log.info("$$ insert value to result topic : {}" , resultRequest.toString());
                         kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
                         break; // 더이상 진행하지 않음
                     }
@@ -94,6 +100,7 @@ public class SdaMainMasRequestConsumer {
             {
                 // result 큐에 실패로 넣음
                 resultRequest.setUpmuG(getUpmug(updateRequest.getSvcId(), "FAIL"));
+                log.info("$$ insert value to result topic : {}" , resultRequest.toString());
                 kafkaTemplate.send("mtc.ncr.result", "FAIL" , resultRequest);
             }
         }
