@@ -3,6 +3,7 @@ package core.apis.controller;
 import core.apis.MtcSdaMainMasApi;
 import core.dto.MtcNcrSdaMainMasRequest;
 import core.dto.MtcNcrSdaMainMasResponse;
+import core.dto.MtcNcrUpdateMainMasRequest;
 import core.service.MtcSdaMainMasService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
