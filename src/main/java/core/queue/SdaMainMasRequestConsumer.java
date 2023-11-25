@@ -49,11 +49,11 @@ public class SdaMainMasRequestConsumer {
                     = new MtcResultRequest( updateRequest.getAcno() , updateRequest.getRequestSubList().get(i).getTrxdt(),
                     updateRequest.getRequestSubList().get(i).getCur_c() ,
                     0, /*업무구분은 비워둔다*/
-                    updateRequest.getRequestSubList().get(i).getPayAcser() /*승인번호*/,
+                    updateRequest.getAprvSno() /*승인번호*/,
                     updateRequest.getRequestSubList().get(i).getTrxAmt() /*요청금액*/,
                     0.0 /*거래전잔액으로 셋팅한다*/,
                     "" /*에러메세지는 비워둔다*/,
-                    updateRequest.getPayInfo(),
+                    updateRequest.getPayInfo(), ("PAY".equals(updateRequest.getSvcId()) ? "Y" : "N"),
                     updateRequest.getGid());
 
             try

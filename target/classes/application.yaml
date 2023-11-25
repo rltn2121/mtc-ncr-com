@@ -9,7 +9,7 @@ spring:
       enable-auto-commit: off
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: core.converters.GenericDeserializer
+      value-deserializer: core.converters.ComMessageDeserializer
   datasource:
     url: jdbc:postgresql://15.165.34.151:5432/mtc_db
     username: team9

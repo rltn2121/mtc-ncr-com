@@ -2,9 +2,6 @@ package core.converters;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import core.dto.MtcExgRequest;
-import core.dto.MtcNcrPayRequest;
-import core.dto.MtcNcrSdaMainMasRequest;
 import core.dto.MtcNcrUpdateMainMasRequest;
 import org.apache.commons.lang3.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
